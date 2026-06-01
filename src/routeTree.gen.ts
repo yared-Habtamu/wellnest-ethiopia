@@ -9,38 +9,221 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppSettingsRouteImport } from './routes/_app.settings'
+import { Route as AppNutritionRouteImport } from './routes/_app.nutrition'
+import { Route as AppMoodRouteImport } from './routes/_app.mood'
+import { Route as AppJournalRouteImport } from './routes/_app.journal'
+import { Route as AppGamificationRouteImport } from './routes/_app.gamification'
+import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
+import { Route as AppWellnessIndexRouteImport } from './routes/_app.wellness.index'
+import { Route as AppWellnessSymptomsRouteImport } from './routes/_app.wellness.symptoms'
+import { Route as AppWellnessSisterhoodRouteImport } from './routes/_app.wellness.sisterhood'
+import { Route as AppWellnessGuideRouteImport } from './routes/_app.wellness.guide'
+import { Route as AppWellnessGroundingRouteImport } from './routes/_app.wellness.grounding'
+import { Route as AppWellnessCycleRouteImport } from './routes/_app.wellness.cycle'
 
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppSettingsRoute = AppSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppNutritionRoute = AppNutritionRouteImport.update({
+  id: '/nutrition',
+  path: '/nutrition',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMoodRoute = AppMoodRouteImport.update({
+  id: '/mood',
+  path: '/mood',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppJournalRoute = AppJournalRouteImport.update({
+  id: '/journal',
+  path: '/journal',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppGamificationRoute = AppGamificationRouteImport.update({
+  id: '/gamification',
+  path: '/gamification',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDashboardRoute = AppDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppWellnessIndexRoute = AppWellnessIndexRouteImport.update({
+  id: '/wellness/',
+  path: '/wellness/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppWellnessSymptomsRoute = AppWellnessSymptomsRouteImport.update({
+  id: '/wellness/symptoms',
+  path: '/wellness/symptoms',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppWellnessSisterhoodRoute = AppWellnessSisterhoodRouteImport.update({
+  id: '/wellness/sisterhood',
+  path: '/wellness/sisterhood',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppWellnessGuideRoute = AppWellnessGuideRouteImport.update({
+  id: '/wellness/guide',
+  path: '/wellness/guide',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppWellnessGroundingRoute = AppWellnessGroundingRouteImport.update({
+  id: '/wellness/grounding',
+  path: '/wellness/grounding',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppWellnessCycleRoute = AppWellnessCycleRouteImport.update({
+  id: '/wellness/cycle',
+  path: '/wellness/cycle',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/onboarding': typeof OnboardingRoute
+  '/dashboard': typeof AppDashboardRoute
+  '/gamification': typeof AppGamificationRoute
+  '/journal': typeof AppJournalRoute
+  '/mood': typeof AppMoodRoute
+  '/nutrition': typeof AppNutritionRoute
+  '/settings': typeof AppSettingsRoute
+  '/wellness/cycle': typeof AppWellnessCycleRoute
+  '/wellness/grounding': typeof AppWellnessGroundingRoute
+  '/wellness/guide': typeof AppWellnessGuideRoute
+  '/wellness/sisterhood': typeof AppWellnessSisterhoodRoute
+  '/wellness/symptoms': typeof AppWellnessSymptomsRoute
+  '/wellness/': typeof AppWellnessIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/onboarding': typeof OnboardingRoute
+  '/dashboard': typeof AppDashboardRoute
+  '/gamification': typeof AppGamificationRoute
+  '/journal': typeof AppJournalRoute
+  '/mood': typeof AppMoodRoute
+  '/nutrition': typeof AppNutritionRoute
+  '/settings': typeof AppSettingsRoute
+  '/wellness/cycle': typeof AppWellnessCycleRoute
+  '/wellness/grounding': typeof AppWellnessGroundingRoute
+  '/wellness/guide': typeof AppWellnessGuideRoute
+  '/wellness/sisterhood': typeof AppWellnessSisterhoodRoute
+  '/wellness/symptoms': typeof AppWellnessSymptomsRoute
+  '/wellness': typeof AppWellnessIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_app': typeof AppRouteWithChildren
+  '/onboarding': typeof OnboardingRoute
+  '/_app/dashboard': typeof AppDashboardRoute
+  '/_app/gamification': typeof AppGamificationRoute
+  '/_app/journal': typeof AppJournalRoute
+  '/_app/mood': typeof AppMoodRoute
+  '/_app/nutrition': typeof AppNutritionRoute
+  '/_app/settings': typeof AppSettingsRoute
+  '/_app/wellness/cycle': typeof AppWellnessCycleRoute
+  '/_app/wellness/grounding': typeof AppWellnessGroundingRoute
+  '/_app/wellness/guide': typeof AppWellnessGuideRoute
+  '/_app/wellness/sisterhood': typeof AppWellnessSisterhoodRoute
+  '/_app/wellness/symptoms': typeof AppWellnessSymptomsRoute
+  '/_app/wellness/': typeof AppWellnessIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/onboarding'
+    | '/dashboard'
+    | '/gamification'
+    | '/journal'
+    | '/mood'
+    | '/nutrition'
+    | '/settings'
+    | '/wellness/cycle'
+    | '/wellness/grounding'
+    | '/wellness/guide'
+    | '/wellness/sisterhood'
+    | '/wellness/symptoms'
+    | '/wellness/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/onboarding'
+    | '/dashboard'
+    | '/gamification'
+    | '/journal'
+    | '/mood'
+    | '/nutrition'
+    | '/settings'
+    | '/wellness/cycle'
+    | '/wellness/grounding'
+    | '/wellness/guide'
+    | '/wellness/sisterhood'
+    | '/wellness/symptoms'
+    | '/wellness'
+  id:
+    | '__root__'
+    | '/'
+    | '/_app'
+    | '/onboarding'
+    | '/_app/dashboard'
+    | '/_app/gamification'
+    | '/_app/journal'
+    | '/_app/mood'
+    | '/_app/nutrition'
+    | '/_app/settings'
+    | '/_app/wellness/cycle'
+    | '/_app/wellness/grounding'
+    | '/_app/wellness/guide'
+    | '/_app/wellness/sisterhood'
+    | '/_app/wellness/symptoms'
+    | '/_app/wellness/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
+  OnboardingRoute: typeof OnboardingRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +231,130 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app/settings': {
+      id: '/_app/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AppSettingsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/nutrition': {
+      id: '/_app/nutrition'
+      path: '/nutrition'
+      fullPath: '/nutrition'
+      preLoaderRoute: typeof AppNutritionRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/mood': {
+      id: '/_app/mood'
+      path: '/mood'
+      fullPath: '/mood'
+      preLoaderRoute: typeof AppMoodRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/journal': {
+      id: '/_app/journal'
+      path: '/journal'
+      fullPath: '/journal'
+      preLoaderRoute: typeof AppJournalRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/gamification': {
+      id: '/_app/gamification'
+      path: '/gamification'
+      fullPath: '/gamification'
+      preLoaderRoute: typeof AppGamificationRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/dashboard': {
+      id: '/_app/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/wellness/': {
+      id: '/_app/wellness/'
+      path: '/wellness'
+      fullPath: '/wellness/'
+      preLoaderRoute: typeof AppWellnessIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/wellness/symptoms': {
+      id: '/_app/wellness/symptoms'
+      path: '/wellness/symptoms'
+      fullPath: '/wellness/symptoms'
+      preLoaderRoute: typeof AppWellnessSymptomsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/wellness/sisterhood': {
+      id: '/_app/wellness/sisterhood'
+      path: '/wellness/sisterhood'
+      fullPath: '/wellness/sisterhood'
+      preLoaderRoute: typeof AppWellnessSisterhoodRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/wellness/guide': {
+      id: '/_app/wellness/guide'
+      path: '/wellness/guide'
+      fullPath: '/wellness/guide'
+      preLoaderRoute: typeof AppWellnessGuideRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/wellness/grounding': {
+      id: '/_app/wellness/grounding'
+      path: '/wellness/grounding'
+      fullPath: '/wellness/grounding'
+      preLoaderRoute: typeof AppWellnessGroundingRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/wellness/cycle': {
+      id: '/_app/wellness/cycle'
+      path: '/wellness/cycle'
+      fullPath: '/wellness/cycle'
+      preLoaderRoute: typeof AppWellnessCycleRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
+interface AppRouteChildren {
+  AppDashboardRoute: typeof AppDashboardRoute
+  AppGamificationRoute: typeof AppGamificationRoute
+  AppJournalRoute: typeof AppJournalRoute
+  AppMoodRoute: typeof AppMoodRoute
+  AppNutritionRoute: typeof AppNutritionRoute
+  AppSettingsRoute: typeof AppSettingsRoute
+  AppWellnessCycleRoute: typeof AppWellnessCycleRoute
+  AppWellnessGroundingRoute: typeof AppWellnessGroundingRoute
+  AppWellnessGuideRoute: typeof AppWellnessGuideRoute
+  AppWellnessSisterhoodRoute: typeof AppWellnessSisterhoodRoute
+  AppWellnessSymptomsRoute: typeof AppWellnessSymptomsRoute
+  AppWellnessIndexRoute: typeof AppWellnessIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppDashboardRoute: AppDashboardRoute,
+  AppGamificationRoute: AppGamificationRoute,
+  AppJournalRoute: AppJournalRoute,
+  AppMoodRoute: AppMoodRoute,
+  AppNutritionRoute: AppNutritionRoute,
+  AppSettingsRoute: AppSettingsRoute,
+  AppWellnessCycleRoute: AppWellnessCycleRoute,
+  AppWellnessGroundingRoute: AppWellnessGroundingRoute,
+  AppWellnessGuideRoute: AppWellnessGuideRoute,
+  AppWellnessSisterhoodRoute: AppWellnessSisterhoodRoute,
+  AppWellnessSymptomsRoute: AppWellnessSymptomsRoute,
+  AppWellnessIndexRoute: AppWellnessIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
+  OnboardingRoute: OnboardingRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
