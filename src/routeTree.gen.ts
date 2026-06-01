@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppNutritionRouteImport } from './routes/_app.nutrition'
 import { Route as AppMoodRouteImport } from './routes/_app.mood'
 import { Route as AppJournalRouteImport } from './routes/_app.journal'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
@@ -29,6 +30,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AppNutritionRoute = AppNutritionRouteImport.update({
+  id: '/nutrition',
+  path: '/nutrition',
+  getParentRoute: () => AppRoute,
 } as any)
 const AppMoodRoute = AppMoodRouteImport.update({
   id: '/mood',
@@ -52,6 +58,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AppDashboardRoute
   '/journal': typeof AppJournalRoute
   '/mood': typeof AppMoodRoute
+  '/nutrition': typeof AppNutritionRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -59,6 +66,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AppDashboardRoute
   '/journal': typeof AppJournalRoute
   '/mood': typeof AppMoodRoute
+  '/nutrition': typeof AppNutritionRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -68,12 +76,19 @@ export interface FileRoutesById {
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/journal': typeof AppJournalRoute
   '/_app/mood': typeof AppMoodRoute
+  '/_app/nutrition': typeof AppNutritionRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/onboarding' | '/dashboard' | '/journal' | '/mood'
+  fullPaths:
+    | '/'
+    | '/onboarding'
+    | '/dashboard'
+    | '/journal'
+    | '/mood'
+    | '/nutrition'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/onboarding' | '/dashboard' | '/journal' | '/mood'
+  to: '/' | '/onboarding' | '/dashboard' | '/journal' | '/mood' | '/nutrition'
   id:
     | '__root__'
     | '/'
@@ -82,6 +97,7 @@ export interface FileRouteTypes {
     | '/_app/dashboard'
     | '/_app/journal'
     | '/_app/mood'
+    | '/_app/nutrition'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -113,6 +129,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app/nutrition': {
+      id: '/_app/nutrition'
+      path: '/nutrition'
+      fullPath: '/nutrition'
+      preLoaderRoute: typeof AppNutritionRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/mood': {
       id: '/_app/mood'
       path: '/mood'
@@ -141,12 +164,14 @@ interface AppRouteChildren {
   AppDashboardRoute: typeof AppDashboardRoute
   AppJournalRoute: typeof AppJournalRoute
   AppMoodRoute: typeof AppMoodRoute
+  AppNutritionRoute: typeof AppNutritionRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppDashboardRoute: AppDashboardRoute,
   AppJournalRoute: AppJournalRoute,
   AppMoodRoute: AppMoodRoute,
+  AppNutritionRoute: AppNutritionRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
