@@ -15,6 +15,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppNutritionRouteImport } from './routes/_app.nutrition'
 import { Route as AppMoodRouteImport } from './routes/_app.mood'
 import { Route as AppJournalRouteImport } from './routes/_app.journal'
+import { Route as AppGamificationRouteImport } from './routes/_app.gamification'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppWellnessIndexRouteImport } from './routes/_app.wellness.index'
 import { Route as AppWellnessSymptomsRouteImport } from './routes/_app.wellness.symptoms'
@@ -50,6 +51,11 @@ const AppMoodRoute = AppMoodRouteImport.update({
 const AppJournalRoute = AppJournalRouteImport.update({
   id: '/journal',
   path: '/journal',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppGamificationRoute = AppGamificationRouteImport.update({
+  id: '/gamification',
+  path: '/gamification',
   getParentRoute: () => AppRoute,
 } as any)
 const AppDashboardRoute = AppDashboardRouteImport.update({
@@ -92,6 +98,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/onboarding': typeof OnboardingRoute
   '/dashboard': typeof AppDashboardRoute
+  '/gamification': typeof AppGamificationRoute
   '/journal': typeof AppJournalRoute
   '/mood': typeof AppMoodRoute
   '/nutrition': typeof AppNutritionRoute
@@ -106,6 +113,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/onboarding': typeof OnboardingRoute
   '/dashboard': typeof AppDashboardRoute
+  '/gamification': typeof AppGamificationRoute
   '/journal': typeof AppJournalRoute
   '/mood': typeof AppMoodRoute
   '/nutrition': typeof AppNutritionRoute
@@ -122,6 +130,7 @@ export interface FileRoutesById {
   '/_app': typeof AppRouteWithChildren
   '/onboarding': typeof OnboardingRoute
   '/_app/dashboard': typeof AppDashboardRoute
+  '/_app/gamification': typeof AppGamificationRoute
   '/_app/journal': typeof AppJournalRoute
   '/_app/mood': typeof AppMoodRoute
   '/_app/nutrition': typeof AppNutritionRoute
@@ -138,6 +147,7 @@ export interface FileRouteTypes {
     | '/'
     | '/onboarding'
     | '/dashboard'
+    | '/gamification'
     | '/journal'
     | '/mood'
     | '/nutrition'
@@ -152,6 +162,7 @@ export interface FileRouteTypes {
     | '/'
     | '/onboarding'
     | '/dashboard'
+    | '/gamification'
     | '/journal'
     | '/mood'
     | '/nutrition'
@@ -167,6 +178,7 @@ export interface FileRouteTypes {
     | '/_app'
     | '/onboarding'
     | '/_app/dashboard'
+    | '/_app/gamification'
     | '/_app/journal'
     | '/_app/mood'
     | '/_app/nutrition'
@@ -228,6 +240,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppJournalRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/gamification': {
+      id: '/_app/gamification'
+      path: '/gamification'
+      fullPath: '/gamification'
+      preLoaderRoute: typeof AppGamificationRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/dashboard': {
       id: '/_app/dashboard'
       path: '/dashboard'
@@ -282,6 +301,7 @@ declare module '@tanstack/react-router' {
 
 interface AppRouteChildren {
   AppDashboardRoute: typeof AppDashboardRoute
+  AppGamificationRoute: typeof AppGamificationRoute
   AppJournalRoute: typeof AppJournalRoute
   AppMoodRoute: typeof AppMoodRoute
   AppNutritionRoute: typeof AppNutritionRoute
@@ -295,6 +315,7 @@ interface AppRouteChildren {
 
 const AppRouteChildren: AppRouteChildren = {
   AppDashboardRoute: AppDashboardRoute,
+  AppGamificationRoute: AppGamificationRoute,
   AppJournalRoute: AppJournalRoute,
   AppMoodRoute: AppMoodRoute,
   AppNutritionRoute: AppNutritionRoute,
