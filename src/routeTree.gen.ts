@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppSettingsRouteImport } from './routes/_app.settings'
 import { Route as AppNutritionRouteImport } from './routes/_app.nutrition'
 import { Route as AppMoodRouteImport } from './routes/_app.mood'
 import { Route as AppJournalRouteImport } from './routes/_app.journal'
@@ -37,6 +38,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AppSettingsRoute = AppSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppRoute,
 } as any)
 const AppNutritionRoute = AppNutritionRouteImport.update({
   id: '/nutrition',
@@ -102,6 +108,7 @@ export interface FileRoutesByFullPath {
   '/journal': typeof AppJournalRoute
   '/mood': typeof AppMoodRoute
   '/nutrition': typeof AppNutritionRoute
+  '/settings': typeof AppSettingsRoute
   '/wellness/cycle': typeof AppWellnessCycleRoute
   '/wellness/grounding': typeof AppWellnessGroundingRoute
   '/wellness/guide': typeof AppWellnessGuideRoute
@@ -117,6 +124,7 @@ export interface FileRoutesByTo {
   '/journal': typeof AppJournalRoute
   '/mood': typeof AppMoodRoute
   '/nutrition': typeof AppNutritionRoute
+  '/settings': typeof AppSettingsRoute
   '/wellness/cycle': typeof AppWellnessCycleRoute
   '/wellness/grounding': typeof AppWellnessGroundingRoute
   '/wellness/guide': typeof AppWellnessGuideRoute
@@ -134,6 +142,7 @@ export interface FileRoutesById {
   '/_app/journal': typeof AppJournalRoute
   '/_app/mood': typeof AppMoodRoute
   '/_app/nutrition': typeof AppNutritionRoute
+  '/_app/settings': typeof AppSettingsRoute
   '/_app/wellness/cycle': typeof AppWellnessCycleRoute
   '/_app/wellness/grounding': typeof AppWellnessGroundingRoute
   '/_app/wellness/guide': typeof AppWellnessGuideRoute
@@ -151,6 +160,7 @@ export interface FileRouteTypes {
     | '/journal'
     | '/mood'
     | '/nutrition'
+    | '/settings'
     | '/wellness/cycle'
     | '/wellness/grounding'
     | '/wellness/guide'
@@ -166,6 +176,7 @@ export interface FileRouteTypes {
     | '/journal'
     | '/mood'
     | '/nutrition'
+    | '/settings'
     | '/wellness/cycle'
     | '/wellness/grounding'
     | '/wellness/guide'
@@ -182,6 +193,7 @@ export interface FileRouteTypes {
     | '/_app/journal'
     | '/_app/mood'
     | '/_app/nutrition'
+    | '/_app/settings'
     | '/_app/wellness/cycle'
     | '/_app/wellness/grounding'
     | '/_app/wellness/guide'
@@ -218,6 +230,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_app/settings': {
+      id: '/_app/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AppSettingsRouteImport
+      parentRoute: typeof AppRoute
     }
     '/_app/nutrition': {
       id: '/_app/nutrition'
@@ -305,6 +324,7 @@ interface AppRouteChildren {
   AppJournalRoute: typeof AppJournalRoute
   AppMoodRoute: typeof AppMoodRoute
   AppNutritionRoute: typeof AppNutritionRoute
+  AppSettingsRoute: typeof AppSettingsRoute
   AppWellnessCycleRoute: typeof AppWellnessCycleRoute
   AppWellnessGroundingRoute: typeof AppWellnessGroundingRoute
   AppWellnessGuideRoute: typeof AppWellnessGuideRoute
@@ -319,6 +339,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppJournalRoute: AppJournalRoute,
   AppMoodRoute: AppMoodRoute,
   AppNutritionRoute: AppNutritionRoute,
+  AppSettingsRoute: AppSettingsRoute,
   AppWellnessCycleRoute: AppWellnessCycleRoute,
   AppWellnessGroundingRoute: AppWellnessGroundingRoute,
   AppWellnessGuideRoute: AppWellnessGuideRoute,
