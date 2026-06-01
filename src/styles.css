@@ -172,5 +172,18 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-family: var(--font-body);
+    font-feature-settings: "ss01", "cv11";
+  }
+  h1, h2, h3, h4, h5 {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+  }
+}
+
+@layer utilities {
+  .font-display { font-family: var(--font-display); }
+  .bg-gradient-bloom {
+    background-image: linear-gradient(135deg, var(--primary-soft), var(--accent));
   }
 }
