@@ -18,6 +18,7 @@ import { Route as AppJournalRouteImport } from './routes/_app.journal'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppWellnessIndexRouteImport } from './routes/_app.wellness.index'
 import { Route as AppWellnessSymptomsRouteImport } from './routes/_app.wellness.symptoms'
+import { Route as AppWellnessSisterhoodRouteImport } from './routes/_app.wellness.sisterhood'
 import { Route as AppWellnessGuideRouteImport } from './routes/_app.wellness.guide'
 import { Route as AppWellnessGroundingRouteImport } from './routes/_app.wellness.grounding'
 import { Route as AppWellnessCycleRouteImport } from './routes/_app.wellness.cycle'
@@ -66,6 +67,11 @@ const AppWellnessSymptomsRoute = AppWellnessSymptomsRouteImport.update({
   path: '/wellness/symptoms',
   getParentRoute: () => AppRoute,
 } as any)
+const AppWellnessSisterhoodRoute = AppWellnessSisterhoodRouteImport.update({
+  id: '/wellness/sisterhood',
+  path: '/wellness/sisterhood',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppWellnessGuideRoute = AppWellnessGuideRouteImport.update({
   id: '/wellness/guide',
   path: '/wellness/guide',
@@ -92,6 +98,7 @@ export interface FileRoutesByFullPath {
   '/wellness/cycle': typeof AppWellnessCycleRoute
   '/wellness/grounding': typeof AppWellnessGroundingRoute
   '/wellness/guide': typeof AppWellnessGuideRoute
+  '/wellness/sisterhood': typeof AppWellnessSisterhoodRoute
   '/wellness/symptoms': typeof AppWellnessSymptomsRoute
   '/wellness/': typeof AppWellnessIndexRoute
 }
@@ -105,6 +112,7 @@ export interface FileRoutesByTo {
   '/wellness/cycle': typeof AppWellnessCycleRoute
   '/wellness/grounding': typeof AppWellnessGroundingRoute
   '/wellness/guide': typeof AppWellnessGuideRoute
+  '/wellness/sisterhood': typeof AppWellnessSisterhoodRoute
   '/wellness/symptoms': typeof AppWellnessSymptomsRoute
   '/wellness': typeof AppWellnessIndexRoute
 }
@@ -120,6 +128,7 @@ export interface FileRoutesById {
   '/_app/wellness/cycle': typeof AppWellnessCycleRoute
   '/_app/wellness/grounding': typeof AppWellnessGroundingRoute
   '/_app/wellness/guide': typeof AppWellnessGuideRoute
+  '/_app/wellness/sisterhood': typeof AppWellnessSisterhoodRoute
   '/_app/wellness/symptoms': typeof AppWellnessSymptomsRoute
   '/_app/wellness/': typeof AppWellnessIndexRoute
 }
@@ -135,6 +144,7 @@ export interface FileRouteTypes {
     | '/wellness/cycle'
     | '/wellness/grounding'
     | '/wellness/guide'
+    | '/wellness/sisterhood'
     | '/wellness/symptoms'
     | '/wellness/'
   fileRoutesByTo: FileRoutesByTo
@@ -148,6 +158,7 @@ export interface FileRouteTypes {
     | '/wellness/cycle'
     | '/wellness/grounding'
     | '/wellness/guide'
+    | '/wellness/sisterhood'
     | '/wellness/symptoms'
     | '/wellness'
   id:
@@ -162,6 +173,7 @@ export interface FileRouteTypes {
     | '/_app/wellness/cycle'
     | '/_app/wellness/grounding'
     | '/_app/wellness/guide'
+    | '/_app/wellness/sisterhood'
     | '/_app/wellness/symptoms'
     | '/_app/wellness/'
   fileRoutesById: FileRoutesById
@@ -237,6 +249,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppWellnessSymptomsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/wellness/sisterhood': {
+      id: '/_app/wellness/sisterhood'
+      path: '/wellness/sisterhood'
+      fullPath: '/wellness/sisterhood'
+      preLoaderRoute: typeof AppWellnessSisterhoodRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/wellness/guide': {
       id: '/_app/wellness/guide'
       path: '/wellness/guide'
@@ -269,6 +288,7 @@ interface AppRouteChildren {
   AppWellnessCycleRoute: typeof AppWellnessCycleRoute
   AppWellnessGroundingRoute: typeof AppWellnessGroundingRoute
   AppWellnessGuideRoute: typeof AppWellnessGuideRoute
+  AppWellnessSisterhoodRoute: typeof AppWellnessSisterhoodRoute
   AppWellnessSymptomsRoute: typeof AppWellnessSymptomsRoute
   AppWellnessIndexRoute: typeof AppWellnessIndexRoute
 }
@@ -281,6 +301,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppWellnessCycleRoute: AppWellnessCycleRoute,
   AppWellnessGroundingRoute: AppWellnessGroundingRoute,
   AppWellnessGuideRoute: AppWellnessGuideRoute,
+  AppWellnessSisterhoodRoute: AppWellnessSisterhoodRoute,
   AppWellnessSymptomsRoute: AppWellnessSymptomsRoute,
   AppWellnessIndexRoute: AppWellnessIndexRoute,
 }
