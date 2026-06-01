@@ -19,6 +19,7 @@ import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppWellnessIndexRouteImport } from './routes/_app.wellness.index'
 import { Route as AppWellnessSymptomsRouteImport } from './routes/_app.wellness.symptoms'
 import { Route as AppWellnessGuideRouteImport } from './routes/_app.wellness.guide'
+import { Route as AppWellnessGroundingRouteImport } from './routes/_app.wellness.grounding'
 import { Route as AppWellnessCycleRouteImport } from './routes/_app.wellness.cycle'
 
 const OnboardingRoute = OnboardingRouteImport.update({
@@ -70,6 +71,11 @@ const AppWellnessGuideRoute = AppWellnessGuideRouteImport.update({
   path: '/wellness/guide',
   getParentRoute: () => AppRoute,
 } as any)
+const AppWellnessGroundingRoute = AppWellnessGroundingRouteImport.update({
+  id: '/wellness/grounding',
+  path: '/wellness/grounding',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppWellnessCycleRoute = AppWellnessCycleRouteImport.update({
   id: '/wellness/cycle',
   path: '/wellness/cycle',
@@ -84,6 +90,7 @@ export interface FileRoutesByFullPath {
   '/mood': typeof AppMoodRoute
   '/nutrition': typeof AppNutritionRoute
   '/wellness/cycle': typeof AppWellnessCycleRoute
+  '/wellness/grounding': typeof AppWellnessGroundingRoute
   '/wellness/guide': typeof AppWellnessGuideRoute
   '/wellness/symptoms': typeof AppWellnessSymptomsRoute
   '/wellness/': typeof AppWellnessIndexRoute
@@ -96,6 +103,7 @@ export interface FileRoutesByTo {
   '/mood': typeof AppMoodRoute
   '/nutrition': typeof AppNutritionRoute
   '/wellness/cycle': typeof AppWellnessCycleRoute
+  '/wellness/grounding': typeof AppWellnessGroundingRoute
   '/wellness/guide': typeof AppWellnessGuideRoute
   '/wellness/symptoms': typeof AppWellnessSymptomsRoute
   '/wellness': typeof AppWellnessIndexRoute
@@ -110,6 +118,7 @@ export interface FileRoutesById {
   '/_app/mood': typeof AppMoodRoute
   '/_app/nutrition': typeof AppNutritionRoute
   '/_app/wellness/cycle': typeof AppWellnessCycleRoute
+  '/_app/wellness/grounding': typeof AppWellnessGroundingRoute
   '/_app/wellness/guide': typeof AppWellnessGuideRoute
   '/_app/wellness/symptoms': typeof AppWellnessSymptomsRoute
   '/_app/wellness/': typeof AppWellnessIndexRoute
@@ -124,6 +133,7 @@ export interface FileRouteTypes {
     | '/mood'
     | '/nutrition'
     | '/wellness/cycle'
+    | '/wellness/grounding'
     | '/wellness/guide'
     | '/wellness/symptoms'
     | '/wellness/'
@@ -136,6 +146,7 @@ export interface FileRouteTypes {
     | '/mood'
     | '/nutrition'
     | '/wellness/cycle'
+    | '/wellness/grounding'
     | '/wellness/guide'
     | '/wellness/symptoms'
     | '/wellness'
@@ -149,6 +160,7 @@ export interface FileRouteTypes {
     | '/_app/mood'
     | '/_app/nutrition'
     | '/_app/wellness/cycle'
+    | '/_app/wellness/grounding'
     | '/_app/wellness/guide'
     | '/_app/wellness/symptoms'
     | '/_app/wellness/'
@@ -232,6 +244,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppWellnessGuideRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/wellness/grounding': {
+      id: '/_app/wellness/grounding'
+      path: '/wellness/grounding'
+      fullPath: '/wellness/grounding'
+      preLoaderRoute: typeof AppWellnessGroundingRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/wellness/cycle': {
       id: '/_app/wellness/cycle'
       path: '/wellness/cycle'
@@ -248,6 +267,7 @@ interface AppRouteChildren {
   AppMoodRoute: typeof AppMoodRoute
   AppNutritionRoute: typeof AppNutritionRoute
   AppWellnessCycleRoute: typeof AppWellnessCycleRoute
+  AppWellnessGroundingRoute: typeof AppWellnessGroundingRoute
   AppWellnessGuideRoute: typeof AppWellnessGuideRoute
   AppWellnessSymptomsRoute: typeof AppWellnessSymptomsRoute
   AppWellnessIndexRoute: typeof AppWellnessIndexRoute
@@ -259,6 +279,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppMoodRoute: AppMoodRoute,
   AppNutritionRoute: AppNutritionRoute,
   AppWellnessCycleRoute: AppWellnessCycleRoute,
+  AppWellnessGroundingRoute: AppWellnessGroundingRoute,
   AppWellnessGuideRoute: AppWellnessGuideRoute,
   AppWellnessSymptomsRoute: AppWellnessSymptomsRoute,
   AppWellnessIndexRoute: AppWellnessIndexRoute,
