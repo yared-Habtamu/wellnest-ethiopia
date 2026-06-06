@@ -1,4 +1,4 @@
-import { Link, Outlet, useRouterState } from "@tanstack/react-router";
+import { Link, Outlet, useRouterState, useNavigate } from "@tanstack/react-router";
 import {
   Home,
   Smile,
@@ -7,18 +7,23 @@ import {
   Flower2,
   Trophy,
   Settings,
-  ShieldAlert,
   WifiOff,
   Eye,
   EyeOff,
+
+  Languages,
+  LogOut,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSafety } from "@/lib/safety";
 import { getQueue } from "@/lib/offline-queue";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "@/lib/auth";
 
 export function AppShell() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const { logout } = useAuth();
+  const navigate = useNavigate();
   const nav = [
     { to: "/dashboard", label: t("nav.today"), icon: Home },
     { to: "/mood", label: t("nav.mood"), icon: Smile },
@@ -53,7 +58,7 @@ export function AppShell() {
     <div className="min-h-screen bg-background text-foreground">
       <div className="mx-auto flex max-w-7xl flex-col md:flex-row">
         {/* Sidebar (desktop) */}
-        <aside className="hidden md:flex md:w-64 md:flex-col md:gap-1 md:border-r md:border-border/60 md:p-5">
+        <aside className="hidden md:flex md:w-64 md:flex-col md:gap-1 md:border-r md:border-border/60 md:p-5 sticky top-0 h-screen overflow-hidden">
           <Link to="/dashboard" className="mb-6 flex items-center gap-2">
             <div className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-bloom">
               <Flower2 className="h-5 w-5 text-primary-foreground" />
@@ -89,20 +94,27 @@ export function AppShell() {
           </nav>
 
           <div className="mt-auto flex flex-col gap-2 pt-6">
+            {/* Camouflage mode */}
             <button
               onClick={() => setCamouflage(!camouflage)}
-              className="flex items-center gap-2 rounded-xl border border-border bg-card px-3 py-2 text-xs text-muted-foreground hover:bg-muted"
+              className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors text-muted-foreground hover:bg-secondary/60 hover:text-foreground w-full text-left cursor-pointer"
             >
-              {camouflage ? <Eye className="h-3.5 w-3.5" /> : <EyeOff className="h-3.5 w-3.5" />}
-              {camouflage ? t("settings.camo") : t("settings.camo")}
+              {camouflage ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
+              <span>{t("settings.camo")}</span>
             </button>
+
+            {/* Logout button */}
             <button
-              onClick={panicExit}
-              className="flex items-center justify-center gap-2 rounded-xl bg-destructive px-3 py-2.5 text-sm font-semibold text-destructive-foreground shadow-sm hover:opacity-90"
-              aria-label="Exit immediately to a neutral page"
+              onClick={() => {
+                logout();
+                navigate({ to: "/" });
+              }}
+              className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors text-destructive hover:bg-destructive/10 w-full text-left cursor-pointer"
             >
-              <ShieldAlert className="h-4 w-4" /> {t("common.quickExit")}
+              <LogOut className="h-4 w-4" />
+              <span>{t("common.exit")}</span>
             </button>
+
           </div>
         </aside>
 
@@ -129,12 +141,20 @@ export function AppShell() {
                   {t("common.pendingSync", { count: queueCount })}
                 </span>
               )}
-              <button
-                onClick={panicExit}
-                className="flex items-center gap-1.5 rounded-full bg-destructive px-3 py-1.5 text-xs font-semibold text-destructive-foreground shadow-sm hover:opacity-90"
-              >
-                <ShieldAlert className="h-3.5 w-3.5" /> {t("common.exit")}
-              </button>
+              {/* Language toggle (mobile) */}
+              <div className="inline-flex rounded-full border border-border p-0.5">
+                {(["en", "am"] as const).map((l) => (
+                  <button
+                    key={l}
+                    onClick={() => i18n.changeLanguage(l)}
+                    className={`rounded-full px-2.5 py-1 text-xs ${
+                      i18n.language === l ? "bg-primary text-primary-foreground" : "text-muted-foreground"
+                    }`}
+                  >
+                    {l === "en" ? "EN" : "አማ"}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 
