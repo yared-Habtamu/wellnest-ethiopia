@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { PageHeader, SectionCard } from "@/components/SectionCard";
+import { generateChatResponse } from "@/lib/api/chat.functions";
 import { Send, Wind, Phone } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -13,19 +14,33 @@ type Msg = { role: "ai" | "you"; text: string };
 
 function GuidePage() {
   const { t } = useTranslation();
-  const gentleResponses = [t("guide.r1"), t("guide.r2"), t("guide.r3")];
   const [msgs, setMsgs] = useState<Msg[]>([{ role: "ai", text: t("guide.starter") }]);
   const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const send = () => {
-    if (!input.trim()) return;
+  const send = async () => {
+    if (!input.trim() || isLoading) return;
     const you: Msg = { role: "you", text: input.trim() };
-    const ai: Msg = {
-      role: "ai",
-      text: gentleResponses[Math.floor(Math.random() * gentleResponses.length)],
-    };
-    setMsgs((m) => [...m, you, ai]);
+    setMsgs((m) => [...m, you]);
     setInput("");
+    setIsLoading(true);
+
+    try {
+      const response = await generateChatResponse({
+        data: {
+          history: msgs,
+          message: you.text
+        }
+      });
+      const ai: Msg = { role: "ai", text: response.text };
+      setMsgs((m) => [...m, ai]);
+    } catch (e) {
+      console.error(e);
+      const ai: Msg = { role: "ai", text: "I'm having trouble connecting right now. Please try again later." };
+      setMsgs((m) => [...m, ai]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
