@@ -9,7 +9,7 @@ interface User {
 interface AuthContextValue {
   user: User | null;
   register: (name: string, email: string, password: string) => void;
-  login: (email: string, password: string) => void;
+  login: (email: string, password: string) => boolean,
   logout: () => void;
 }
 
@@ -50,15 +50,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(newUser);
   };
 
-  const login = (email: string, password: string) => {
+  const login = (email: string, password: string): boolean => {
     const users = getUsers();
     const found = users.find((u) => u.email === email && u.password === password);
     if (!found) {
-      alert("Invalid credentials");
-      return;
+      return false;
     }
-    localStorage.setItem("wellnest.currentUser", JSON.stringify(found));
+    if (typeof window !== 'undefined') {
+      localStorage.setItem("wellnest.currentUser", JSON.stringify(found));
+    }
     setUser(found);
+    return true;
   };
 
   const logout = () => {

@@ -27,10 +27,15 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    login(email, password);
-    navigate({ to: "/dashboard" });
+    const success = login(email, password);
+    if (success) {
+      navigate({ to: "/dashboard" });
+    } else {
+      setErrorMsg("Invalid credentials");
+    }
   };
 
   return (
