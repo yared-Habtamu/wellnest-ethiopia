@@ -49,9 +49,12 @@ function Index() {
               {t("index.body")}
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link to="/onboarding" className="rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-sm transition hover:opacity-90">
-                {t("index.begin")}
-              </Link>
+              <Link
+  to="/register"
+  className="rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-sm transition hover:opacity-90"
+>
+  {t("index.begin")}
+</Link>
               <Link to="/dashboard" className="rounded-full border border-border bg-card px-6 py-3 text-sm font-semibold text-foreground hover:bg-muted">
                 {t("index.skip")}
               </Link>
