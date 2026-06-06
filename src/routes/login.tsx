@@ -27,10 +27,16 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const [errorMsg, setErrorMsg] = React.useState<string | null>(null);
-  const handleSubmit = (e: React.FormEvent) => {
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const success = login(email, password);
+    setIsLoggingIn(true);
+    setErrorMsg(null);
+    const success = await login(email, password);
+    setIsLoggingIn(false);
+    
     if (success) {
       navigate({ to: "/dashboard" });
     } else {
@@ -67,8 +73,8 @@ function Login() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <Button type="submit" className="w-full">
-            Log In
+          <Button type="submit" className="w-full" disabled={isLoggingIn}>
+            {isLoggingIn ? "Logging in..." : "Log In"}
           </Button>
         </form>
         <p className="mt-6 text-center text-sm text-muted-foreground">

@@ -28,13 +28,17 @@ function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isRegistering, setIsRegistering] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app you'd send these to a backend. Here we just store email.
-    // The name could be stored similarly; we just keep it simple.
-    register(name, email, password);
-    // After registration go to onboarding.
-    navigate({ to: "/onboarding" });
+    setIsRegistering(true);
+    const success = await register(name, email, password);
+    setIsRegistering(false);
+    
+    if (success) {
+      navigate({ to: "/onboarding" });
+    }
   };
 
   return (
@@ -77,8 +81,8 @@ function Register() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <Button type="submit" className="w-full">
-            Sign Up
+          <Button type="submit" className="w-full" disabled={isRegistering}>
+            {isRegistering ? "Creating Account..." : "Sign Up"}
           </Button>
         </form>
         <p className="mt-6 text-center text-sm text-muted-foreground">

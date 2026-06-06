@@ -1,75 +1,77 @@
 import * as React from "react";
+import { supabase } from "./supabase";
 
 interface User {
+  id: string;
   name: string;
   email: string;
-  password: string; // plain for demo – NEVER store plain passwords in production
 }
 
 interface AuthContextValue {
   user: User | null;
-  register: (name: string, email: string, password: string) => void;
-  login: (email: string, password: string) => boolean,
-  logout: () => void;
+  register: (name: string, email: string, password: string) => Promise<boolean>;
+  login: (email: string, password: string) => Promise<boolean>;
+  logout: () => Promise<void>;
+  isLoading: boolean;
 }
 
 const AuthContext = React.createContext<AuthContextValue | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = React.useState<User | null>(() => {
-    if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem("wellnest.currentUser");
-      return stored ? JSON.parse(stored) : null;
-    }
-    return null;
-  });
+  const [user, setUser] = React.useState<User | null>(null);
+  const [isLoading, setIsLoading] = React.useState(true);
 
-  const getUsers = (): User[] => {
-    if (typeof window === 'undefined') return [];
-    const data = localStorage.getItem("wellnest.users");
-    return data ? JSON.parse(data) : [];
-  };
+  React.useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        setUser({ id: session.user.id, email: session.user.email || "", name: session.user.user_metadata?.name || "" });
+      }
+      setIsLoading(false);
+    });
 
-  const saveUsers = (users: User[]) => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem("wellnest.users", JSON.stringify(users));
-    }
-  };
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session) {
+        setUser({ id: session.user.id, email: session.user.email || "", name: session.user.user_metadata?.name || "" });
+      } else {
+        setUser(null);
+      }
+    });
 
-  const register = (name: string, email: string, password: string) => {
-    const users = getUsers();
-    // simple duplicate check
-    if (users.some((u) => u.email === email)) {
-      alert("Email already registered");
-      return;
-    }
-    const newUser: User = { name, email, password };
-    users.push(newUser);
-    saveUsers(users);
-    localStorage.setItem("wellnest.currentUser", JSON.stringify(newUser));
-    setUser(newUser);
-  };
+    return () => subscription.unsubscribe();
+  }, []);
 
-  const login = (email: string, password: string): boolean => {
-    const users = getUsers();
-    const found = users.find((u) => u.email === email && u.password === password);
-    if (!found) {
+  const register = async (name: string, email: string, password: string) => {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { data: { name } }
+    });
+    
+    if (error) {
+      alert(error.message);
       return false;
     }
-    if (typeof window !== 'undefined') {
-      localStorage.setItem("wellnest.currentUser", JSON.stringify(found));
-    }
-    setUser(found);
     return true;
   };
 
-  const logout = () => {
-    localStorage.removeItem("wellnest.currentUser");
-    setUser(null);
+  const login = async (email: string, password: string) => {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    
+    if (error) {
+      return false;
+    }
+    return true;
+  };
+
+  const logout = async () => {
+    await supabase.auth.signOut();
   };
 
   return (
-    <AuthContext.Provider value={{ user, register, login, logout }}>
+    <AuthContext.Provider value={{ user, register, login, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   );
