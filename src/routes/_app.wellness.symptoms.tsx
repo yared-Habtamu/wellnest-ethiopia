@@ -3,19 +3,20 @@ import { useState } from "react";
 import { PageHeader, SectionCard } from "@/components/SectionCard";
 import { enqueue } from "@/lib/offline-queue";
 import { Check } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export const Route = createFileRoute("/_app/wellness/symptoms")({
   head: () => ({ meta: [{ title: "Symptoms — WellNest" }] }),
   component: SymptomsPage,
 });
 
-const categories = [
-  { group: "Body", items: ["Tension", "Fatigue", "Headache", "Stomach", "Restless sleep"] },
-  { group: "Feelings", items: ["Anxious", "Numb", "Tearful", "Hyper-alert", "Disconnected"] },
-  { group: "Mind", items: ["Racing thoughts", "Memory fog", "Flashes", "Difficulty focusing"] },
-];
-
 function SymptomsPage() {
+  const { t } = useTranslation();
+  const categories = [
+    { group: t("symptoms.body"), items: [t("symptoms.tension"), t("symptoms.fatigue"), t("symptoms.headache"), t("symptoms.stomach"), t("symptoms.restless")] },
+    { group: t("symptoms.feelings"), items: [t("symptoms.anxious"), t("symptoms.numb"), t("symptoms.tearful"), t("symptoms.hyper"), t("symptoms.disconnected")] },
+    { group: t("symptoms.mind"), items: [t("symptoms.racing"), t("symptoms.fog"), t("symptoms.flashes"), t("symptoms.focus")] },
+  ];
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [intensity, setIntensity] = useState(3);
   const [note, setNote] = useState("");
@@ -43,13 +44,13 @@ function SymptomsPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Trauma symptom log"
-        title="Whatever you noticed — that's enough."
-        subtitle="You don't have to explain anything. Tap what fits. Skip what doesn't."
+        eyebrow={t("symptoms.eyebrow")}
+        title={t("symptoms.title")}
+        subtitle={t("symptoms.subtitle")}
       />
 
       <div className="grid gap-5 lg:grid-cols-3">
-        <SectionCard title="What's present" className="lg:col-span-2">
+        <SectionCard title={t("symptoms.present")} className="lg:col-span-2">
           <div className="space-y-5">
             {categories.map((c) => (
               <div key={c.group}>
@@ -79,7 +80,7 @@ function SymptomsPage() {
           </div>
         </SectionCard>
 
-        <SectionCard title="Intensity">
+        <SectionCard title={t("symptoms.intensity")}>
           <div className="space-y-3">
             <input
               type="range"
@@ -90,36 +91,36 @@ function SymptomsPage() {
               className="w-full accent-[oklch(var(--primary))]"
             />
             <div className="flex justify-between text-xs text-muted-foreground">
-              <span>Whisper</span>
-              <span>Loud</span>
+              <span>{t("symptoms.whisper")}</span>
+              <span>{t("symptoms.loud")}</span>
             </div>
             <div className="text-center font-display text-3xl font-semibold">{intensity}</div>
           </div>
         </SectionCard>
 
-        <SectionCard title="Anything else (optional)" className="lg:col-span-3">
+        <SectionCard title={t("symptoms.other")} className="lg:col-span-3">
           <textarea
             rows={3}
             value={note}
             onChange={(e) => setNote(e.target.value)}
-            placeholder="A word, a sentence, or nothing at all…"
+            placeholder={t("symptoms.placeholder")}
             className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
           />
           <div className="mt-4 flex items-center justify-between">
             <p className="text-xs text-muted-foreground">
-              Stays on this device. Never used to train AI. Purge anytime.
+              {t("symptoms.privacy")}
             </p>
             <button
               onClick={save}
               disabled={selected.size === 0}
               className="rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground disabled:opacity-40"
             >
-              Save gently
+              {t("symptoms.save")}
             </button>
           </div>
           {saved && (
             <p className="mt-2 flex items-center justify-end gap-1 text-xs text-primary">
-              <Check className="h-3.5 w-3.5" /> Logged
+              <Check className="h-3.5 w-3.5" /> {t("symptoms.logged")}
             </p>
           )}
         </SectionCard>

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { PageHeader, SectionCard, SoftBadge } from "@/components/SectionCard";
 import { Heart, Flag, EyeOff, Send } from "lucide-react";
 import { enqueue } from "@/lib/offline-queue";
+import { useTranslation } from "react-i18next";
 
 export const Route = createFileRoute("/_app/wellness/sisterhood")({
   head: () => ({ meta: [{ title: "Anonymous Sisterhood — WellNest" }] }),
@@ -36,6 +37,7 @@ const seed: Post[] = [
 ];
 
 function SisterhoodPage() {
+  const { t } = useTranslation();
   const [posts, setPosts] = useState<Post[]>(seed);
   const [tag, setTag] = useState("Healing");
   const [text, setText] = useState("");
@@ -60,33 +62,39 @@ function SisterhoodPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Anonymous Sisterhood Blog"
-        title="A circle of voices. None of them named."
-        subtitle="No usernames, no profiles, no tracking. Be heard exactly as much as you choose."
+        eyebrow={t("sisterhood.eyebrow")}
+        title={t("sisterhood.title")}
+        subtitle={t("sisterhood.subtitle")}
       />
 
       <SectionCard className="mb-6">
         <div className="mb-2 flex items-center gap-2 text-xs text-muted-foreground">
-          <EyeOff className="h-3.5 w-3.5" /> Posting as: <SoftBadge>Anonymous</SoftBadge>
+          <EyeOff className="h-3.5 w-3.5" /> {t("sisterhood.postingAs")} <SoftBadge>{t("sisterhood.anonymous")}</SoftBadge>
         </div>
         <textarea
           rows={3}
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder="Share a sentence, a story, or a small win…"
+          placeholder={t("sisterhood.placeholder")}
           className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
         />
         <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
           <div className="flex gap-1.5">
-            {["Healing", "Courage", "Grief", "Joy", "Cycle"].map((t) => (
+            {[
+              { k: "Healing", l: t("sisterhood.healing") },
+              { k: "Courage", l: t("sisterhood.courage") },
+              { k: "Grief", l: t("sisterhood.grief") },
+              { k: "Joy", l: t("sisterhood.joy") },
+              { k: "Cycle", l: t("sisterhood.cycleTag") },
+            ].map((tt) => (
               <button
-                key={t}
-                onClick={() => setTag(t)}
+                key={tt.k}
+                onClick={() => setTag(tt.k)}
                 className={`rounded-full px-3 py-1 text-xs ${
-                  tag === t ? "bg-primary text-primary-foreground" : "border border-border bg-card"
+                  tag === tt.k ? "bg-primary text-primary-foreground" : "border border-border bg-card"
                 }`}
               >
-                {t}
+                {tt.l}
               </button>
             ))}
           </div>
@@ -95,7 +103,7 @@ function SisterhoodPage() {
             disabled={!text.trim()}
             className="flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground disabled:opacity-40"
           >
-            <Send className="h-3.5 w-3.5" /> Share quietly
+            <Send className="h-3.5 w-3.5" /> {t("sisterhood.share")}
           </button>
         </div>
       </SectionCard>
@@ -113,7 +121,7 @@ function SisterhoodPage() {
                 <Heart className="h-4 w-4" /> {p.hearts}
               </button>
               <button className="flex items-center gap-1 hover:text-foreground">
-                <Flag className="h-3.5 w-3.5" /> Report gently
+                <Flag className="h-3.5 w-3.5" /> {t("sisterhood.report")}
               </button>
             </div>
           </article>
