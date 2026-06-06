@@ -1,30 +1,30 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader, SectionCard, SoftBadge } from "@/components/SectionCard";
 import { Trophy, Flame, Sparkles, Leaf } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export const Route = createFileRoute("/_app/gamification")({
   head: () => ({ meta: [{ title: "Growth — WellNest" }] }),
   component: GamificationPage,
 });
 
-const levels = [
-  { lvl: 1, title: "Seedling", xp: 0 },
-  { lvl: 2, title: "Sprout", xp: 100 },
-  { lvl: 3, title: "Bloom", xp: 300 },
-  { lvl: 4, title: "Mindful Root", xp: 700 },
-  { lvl: 5, title: "Steady Tree", xp: 1500 },
-];
-
-const badges = [
-  { name: "First Bloom", desc: "Completed your first mood check-in", got: true },
-  { name: "Gentle Streak", desc: "5-day quiet streak", got: true },
-  { name: "Voice Found", desc: "Recorded your first journal", got: true },
-  { name: "Sister", desc: "Shared anonymously in Sisterhood", got: false },
-  { name: "Grounded", desc: "Used grounding 10 times", got: false },
-  { name: "Nourished", desc: "Logged 7 meals this week", got: false },
-];
-
 function GamificationPage() {
+  const { t } = useTranslation();
+  const levels = [
+    { lvl: 1, title: t("growth.lvl1"), xp: 0 },
+    { lvl: 2, title: t("growth.lvl2"), xp: 100 },
+    { lvl: 3, title: t("growth.lvl3"), xp: 300 },
+    { lvl: 4, title: t("growth.lvl4"), xp: 700 },
+    { lvl: 5, title: t("growth.lvl5"), xp: 1500 },
+  ];
+  const badges = [
+    { name: t("growth.b1"), desc: t("growth.b1d"), got: true },
+    { name: t("growth.b2"), desc: t("growth.b2d"), got: true },
+    { name: t("growth.b3"), desc: t("growth.b3d"), got: true },
+    { name: t("growth.b4"), desc: t("growth.b4d"), got: false },
+    { name: t("growth.b5"), desc: t("growth.b5d"), got: false },
+    { name: t("growth.b6"), desc: t("growth.b6d"), got: false },
+  ];
   const xp = 820;
   const current = levels[3];
   const next = levels[4];
@@ -33,13 +33,13 @@ function GamificationPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Growth"
-        title="Small things compound, gently."
-        subtitle="Streaks pause, never break. Badges from Women's Wellness stay private."
+        eyebrow={t("growth.eyebrow")}
+        title={t("growth.title")}
+        subtitle={t("growth.subtitle")}
       />
 
       <div className="grid gap-5 lg:grid-cols-3">
-        <SectionCard title="Level" className="lg:col-span-2">
+        <SectionCard title={t("growth.level")} className="lg:col-span-2">
           <div className="flex items-center gap-5">
             <div className="grid h-20 w-20 place-items-center rounded-2xl bg-gradient-bloom">
               <Leaf className="h-9 w-9 text-primary-foreground" />
@@ -47,7 +47,7 @@ function GamificationPage() {
             <div className="flex-1">
               <div className="flex items-end justify-between">
                 <div>
-                  <div className="text-xs uppercase tracking-wider text-muted-foreground">Level {current.lvl}</div>
+                  <div className="text-xs uppercase tracking-wider text-muted-foreground">{t("growth.levelLabel", { n: current.lvl })}</div>
                   <div className="font-display text-2xl font-semibold">{current.title}</div>
                 </div>
                 <SoftBadge tone="warm">{xp} XP</SoftBadge>
@@ -56,23 +56,23 @@ function GamificationPage() {
                 <div className="h-full bg-primary" style={{ width: `${pct}%` }} />
               </div>
               <div className="mt-1 text-xs text-muted-foreground">
-                {next.xp - xp} XP to {next.title}
+                {t("growth.xpTo", { n: next.xp - xp, title: next.title })}
               </div>
             </div>
           </div>
         </SectionCard>
 
-        <SectionCard title="Streak" hint="Pauses are welcome">
+        <SectionCard title={t("growth.streak")} hint={t("growth.streakHint")}>
           <div className="flex items-center gap-3">
             <Flame className="h-7 w-7 text-bloom" />
             <div>
               <div className="font-display text-3xl font-semibold">5</div>
-              <div className="text-xs text-muted-foreground">consecutive days</div>
+              <div className="text-xs text-muted-foreground">{t("growth.consecutive")}</div>
             </div>
           </div>
         </SectionCard>
 
-        <SectionCard title="Badges" className="lg:col-span-3">
+        <SectionCard title={t("growth.badges")} className="lg:col-span-3">
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {badges.map((b) => (
               <div

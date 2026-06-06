@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Mic, Square, Type, Save } from "lucide-react";
 import { PageHeader, SectionCard } from "@/components/SectionCard";
 import { enqueue } from "@/lib/offline-queue";
+import { useTranslation } from "react-i18next";
 
 export const Route = createFileRoute("/_app/journal")({
   head: () => ({ meta: [{ title: "Journal — WellNest" }] }),
@@ -10,6 +11,7 @@ export const Route = createFileRoute("/_app/journal")({
 });
 
 function JournalPage() {
+  const { t } = useTranslation();
   const [mode, setMode] = useState<"voice" | "text">("text");
   const [text, setText] = useState("");
   const [recording, setRecording] = useState(false);
@@ -37,9 +39,9 @@ function JournalPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Journal"
-        title="Say it however you can."
-        subtitle="Voice or text. Stored privately on your device until you choose to sync."
+        eyebrow={t("journal.eyebrow")}
+        title={t("journal.title")}
+        subtitle={t("journal.subtitle")}
       />
 
       <div className="mb-4 inline-flex rounded-full border border-border bg-card p-1">
@@ -51,7 +53,7 @@ function JournalPage() {
               mode === m ? "bg-primary text-primary-foreground" : "text-muted-foreground"
             }`}
           >
-            {m === "text" ? <Type className="h-3.5 w-3.5" /> : <Mic className="h-3.5 w-3.5" />} {m}
+            {m === "text" ? <Type className="h-3.5 w-3.5" /> : <Mic className="h-3.5 w-3.5" />} {t(`journal.${m}`)}
           </button>
         ))}
       </div>
@@ -63,17 +65,17 @@ function JournalPage() {
               value={text}
               onChange={(e) => setText(e.target.value)}
               rows={10}
-              placeholder="Today, I noticed…"
+              placeholder={t("journal.placeholder")}
               className="w-full resize-none rounded-xl border border-border bg-background px-4 py-3 text-base leading-relaxed outline-none focus:border-primary"
             />
             <div className="mt-4 flex items-center justify-between">
-              <span className="text-xs text-muted-foreground">{text.length} characters · auto-private</span>
+              <span className="text-xs text-muted-foreground">{t("journal.chars", { n: text.length })}</span>
               <button
                 onClick={save}
                 disabled={!text.trim()}
                 className="flex items-center gap-1.5 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground disabled:opacity-40"
               >
-                <Save className="h-4 w-4" /> Save entry
+                <Save className="h-4 w-4" /> {t("journal.saveEntry")}
               </button>
             </div>
           </>
@@ -92,11 +94,11 @@ function JournalPage() {
               {String(Math.floor(elapsed / 60)).padStart(2, "0")}:{String(elapsed % 60).padStart(2, "0")}
             </div>
             <p className="mt-1 text-xs text-muted-foreground">
-              Recordings stay on this device. Raw audio purges after 90 days.
+              {t("journal.audioNote")}
             </p>
             {!recording && elapsed === 0 && (
               <p className="mt-6 max-w-sm text-center text-sm text-muted-foreground">
-                Tap to speak. There's no minimum, no maximum. You can stop whenever.
+                {t("journal.tapToSpeak")}
               </p>
             )}
             {!recording && elapsed > 0 && (
@@ -104,7 +106,7 @@ function JournalPage() {
                 onClick={save}
                 className="mt-6 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground"
               >
-                Save recording
+                {t("journal.saveRec")}
               </button>
             )}
           </div>

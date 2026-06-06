@@ -3,20 +3,21 @@ import { useState } from "react";
 import { PageHeader, SectionCard, SoftBadge } from "@/components/SectionCard";
 import { enqueue } from "@/lib/offline-queue";
 import { Droplet, Moon, Sun, Flower2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export const Route = createFileRoute("/_app/wellness/cycle")({
   head: () => ({ meta: [{ title: "Cycle — WellNest" }] }),
   component: CyclePage,
 });
 
-const phases = [
-  { key: "menstrual", label: "Menstrual", Icon: Droplet, color: "bg-bloom/40" },
-  { key: "follicular", label: "Follicular", Icon: Sun, color: "bg-warm/40" },
-  { key: "ovulation", label: "Ovulation", Icon: Flower2, color: "bg-primary-soft/50" },
-  { key: "luteal", label: "Luteal", Icon: Moon, color: "bg-accent/40" },
-];
-
 function CyclePage() {
+  const { t } = useTranslation();
+  const phases = [
+    { key: "menstrual", label: t("cycle.menstrual"), Icon: Droplet, color: "bg-bloom/40" },
+    { key: "follicular", label: t("cycle.follicular"), Icon: Sun, color: "bg-warm/40" },
+    { key: "ovulation", label: t("cycle.ovulation"), Icon: Flower2, color: "bg-primary-soft/50" },
+    { key: "luteal", label: t("cycle.luteal"), Icon: Moon, color: "bg-accent/40" },
+  ];
   const today = new Date();
   const days = Array.from({ length: 28 }, (_, i) => i + 1);
   const cycleDay = 12;
@@ -31,14 +32,14 @@ function CyclePage() {
   return (
     <>
       <PageHeader
-        eyebrow="Cycle"
-        title="Where you are in your rhythm."
-        subtitle="Predictions are gentle estimates, not certainty."
-        action={<SoftBadge tone="bloom">Day {cycleDay} · Follicular</SoftBadge>}
+        eyebrow={t("cycle.eyebrow")}
+        title={t("cycle.title")}
+        subtitle={t("cycle.subtitle")}
+        action={<SoftBadge tone="bloom">{t("cycle.dayBadge", { n: cycleDay })}</SoftBadge>}
       />
 
       <div className="grid gap-5 lg:grid-cols-3">
-        <SectionCard title="This cycle" className="lg:col-span-2">
+        <SectionCard title={t("cycle.thisCycle")} className="lg:col-span-2">
           <div className="grid grid-cols-7 gap-1.5 sm:grid-cols-14">
             {days.map((d) => {
               const isToday = d === cycleDay;
@@ -66,26 +67,32 @@ function CyclePage() {
           </div>
         </SectionCard>
 
-        <SectionCard title="Log today" hint={today.toDateString()}>
+        <SectionCard title={t("cycle.logToday")} hint={today.toDateString()}>
           <div className="space-y-2">
-            {["Light", "Medium", "Heavy", "Spotting", "None"].map((v) => (
+            {[
+              { k: "Light", l: t("cycle.flowLight") },
+              { k: "Medium", l: t("cycle.flowMedium") },
+              { k: "Heavy", l: t("cycle.flowHeavy") },
+              { k: "Spotting", l: t("cycle.flowSpotting") },
+              { k: "None", l: t("cycle.flowNone") },
+            ].map((v) => (
               <button
-                key={v}
-                onClick={() => logFlow(v)}
+                key={v.k}
+                onClick={() => logFlow(v.k)}
                 className="w-full rounded-xl border border-border bg-background px-3 py-2.5 text-left text-sm hover:bg-muted"
               >
-                {v}
+                {v.l}
               </button>
             ))}
           </div>
-          {logged && <p className="mt-3 text-xs text-primary">Saved on this device.</p>}
+          {logged && <p className="mt-3 text-xs text-primary">{t("cycle.saved")}</p>}
         </SectionCard>
 
-        <SectionCard title="Gentle outlook" className="lg:col-span-3">
+        <SectionCard title={t("cycle.outlook")} className="lg:col-span-3">
           <div className="grid gap-3 sm:grid-cols-3">
-            <Outlook title="Next period (est.)" value="in 16 days" />
-            <Outlook title="Fertile window" value="day 11 – 17" />
-            <Outlook title="PMDD watch" value="No patterns yet" tone="muted" />
+            <Outlook title={t("cycle.nextPeriod")} value={t("cycle.nextPeriodVal")} />
+            <Outlook title={t("cycle.fertile")} value={t("cycle.fertileVal")} />
+            <Outlook title={t("cycle.pmdd")} value={t("cycle.pmddVal")} tone="muted" />
           </div>
         </SectionCard>
       </div>

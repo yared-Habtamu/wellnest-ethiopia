@@ -4,6 +4,8 @@ import { PageHeader, SectionCard } from "@/components/SectionCard";
 import { useSafety } from "@/lib/safety";
 import { clearQueue, getQueue } from "@/lib/offline-queue";
 import { Trash2, EyeOff, ShieldAlert, Languages, BellRing, Wifi } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { setLanguage, getLanguage } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_app/settings")({
   head: () => ({ meta: [{ title: "Settings — WellNest" }] }),
@@ -11,78 +13,84 @@ export const Route = createFileRoute("/_app/settings")({
 });
 
 function SettingsPage() {
+  const { t, i18n } = useTranslation();
   const { camouflage, setCamouflage, panicPurge } = useSafety();
-  const [lang, setLang] = useState<"en" | "am">("en");
+  const [lang, setLang] = useState<"en" | "am">(getLanguage());
   const [notifs, setNotifs] = useState(true);
   const [confirming, setConfirming] = useState(false);
   const queueCount = getQueue().length;
 
+  const changeLang = (l: "en" | "am") => {
+    setLang(l);
+    setLanguage(l);
+  };
+  void i18n;
+
   return (
     <>
       <PageHeader
-        eyebrow="Settings"
-        title="Your space, your rules."
-        subtitle="Tune privacy, language, and notifications. Nothing applied without your tap."
+        eyebrow={t("settings.eyebrow")}
+        title={t("settings.title")}
+        subtitle={t("settings.subtitle")}
       />
 
       <div className="grid gap-5 lg:grid-cols-2">
-        <SectionCard title="Privacy & safety">
+        <SectionCard title={t("settings.privacy")}>
           <Row
             Icon={EyeOff}
-            title="Camouflage mode"
-            desc="Disguise app as a neutral utility (Notes / Calendar)."
+            title={t("settings.camo")}
+            desc={t("settings.camoDesc")}
           >
             <Toggle on={camouflage} onChange={setCamouflage} />
           </Row>
-          <Row Icon={ShieldAlert} title="Quick Exit" desc="Always visible. Tapping leaves to a neutral page." />
-          <Row Icon={Trash2} title="Purge all local data" desc="Immediate. No cooling-off period.">
+          <Row Icon={ShieldAlert} title={t("settings.quickExitTitle")} desc={t("settings.quickExitDesc")} />
+          <Row Icon={Trash2} title={t("settings.purge")} desc={t("settings.purgeDesc")}>
             {confirming ? (
               <div className="flex gap-2">
                 <button
                   onClick={panicPurge}
                   className="rounded-full bg-destructive px-3 py-1.5 text-xs font-semibold text-destructive-foreground"
                 >
-                  Yes, purge now
+                  {t("settings.purgeYes")}
                 </button>
                 <button onClick={() => setConfirming(false)} className="rounded-full border border-border px-3 py-1.5 text-xs">
-                  Cancel
+                  {t("common.cancel")}
                 </button>
               </div>
             ) : (
               <button onClick={() => setConfirming(true)} className="rounded-full border border-destructive px-3 py-1.5 text-xs text-destructive">
-                Purge
+                {t("settings.purgeBtn")}
               </button>
             )}
           </Row>
         </SectionCard>
 
-        <SectionCard title="Experience">
-          <Row Icon={Languages} title="Language" desc="Amharic support coming next.">
+        <SectionCard title={t("settings.experience")}>
+          <Row Icon={Languages} title={t("settings.language")} desc={t("settings.languageDesc")}>
             <div className="inline-flex rounded-full border border-border p-0.5">
               {(["en", "am"] as const).map((l) => (
                 <button
                   key={l}
-                  onClick={() => setLang(l)}
-                  disabled={l === "am"}
+                  onClick={() => changeLang(l)}
                   className={`rounded-full px-3 py-1 text-xs ${
                     lang === l ? "bg-primary text-primary-foreground" : "text-muted-foreground"
-                  } disabled:opacity-50`}
+                  }`}
                 >
                   {l === "en" ? "English" : "አማርኛ"}
                 </button>
               ))}
             </div>
           </Row>
-          <Row Icon={BellRing} title="Gentle notifications" desc="We never nag. You set the rhythm.">
+          <Row Icon={BellRing} title={t("settings.notifs")} desc={t("settings.notifsDesc")}>
             <Toggle on={notifs} onChange={setNotifs} />
           </Row>
         </SectionCard>
 
-        <SectionCard title="Offline & sync" className="lg:col-span-2">
+        <SectionCard title={t("settings.offline")} className="lg:col-span-2">
           <Row
             Icon={Wifi}
-            title={`${queueCount} items waiting to sync`}
-            desc="Logs are kept on your device until you're online. Clear locally if you'd rather not sync."
+            title={t("settings.waiting", { n: queueCount })}
+            desc={t("settings.waitingDesc")}
           >
             <button
               onClick={() => {
@@ -91,14 +99,14 @@ function SettingsPage() {
               }}
               className="rounded-full border border-border px-3 py-1.5 text-xs"
             >
-              Clear queue
+              {t("settings.clearQueue")}
             </button>
           </Row>
         </SectionCard>
       </div>
 
       <p className="mt-8 text-center text-xs text-muted-foreground">
-        WellNest is not a medical service. In an emergency, please contact a trusted professional.
+        {t("common.notMedical")}
       </p>
     </>
   );

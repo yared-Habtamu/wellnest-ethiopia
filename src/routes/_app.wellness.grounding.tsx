@@ -1,38 +1,39 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { PageHeader, SectionCard } from "@/components/SectionCard";
+import { useTranslation } from "react-i18next";
 
 export const Route = createFileRoute("/_app/wellness/grounding")({
   head: () => ({ meta: [{ title: "Grounding — WellNest" }] }),
   component: GroundingPage,
 });
 
-const phases = ["Breathe in…", "Hold…", "Breathe out…", "Rest…"];
-const senses = [
-  { n: 5, label: "things you can see" },
-  { n: 4, label: "things you can touch" },
-  { n: 3, label: "things you can hear" },
-  { n: 2, label: "things you can smell" },
-  { n: 1, label: "thing you can taste" },
-];
-
 function GroundingPage() {
+  const { t } = useTranslation();
+  const phases = [t("grounding.in"), t("grounding.hold"), t("grounding.out"), t("grounding.rest")];
+  const senses = [
+    { n: 5, label: t("grounding.s5") },
+    { n: 4, label: t("grounding.s4") },
+    { n: 3, label: t("grounding.s3") },
+    { n: 2, label: t("grounding.s2") },
+    { n: 1, label: t("grounding.s1") },
+  ];
   const [phase, setPhase] = useState(0);
   useEffect(() => {
     const id = setInterval(() => setPhase((p) => (p + 1) % phases.length), 4000);
     return () => clearInterval(id);
-  }, []);
+  }, [phases.length]);
 
   return (
     <>
       <PageHeader
-        eyebrow="One-tap grounding"
-        title="Right here. Right now."
-        subtitle="Move with the breath, or just watch. Both are enough."
+        eyebrow={t("grounding.eyebrow")}
+        title={t("grounding.title")}
+        subtitle={t("grounding.subtitle")}
       />
 
       <div className="grid gap-5 lg:grid-cols-2">
-        <SectionCard title="Box breathing">
+        <SectionCard title={t("grounding.box")}>
           <div className="grid place-items-center py-8">
             <div
               className="relative grid h-56 w-56 place-items-center rounded-full bg-gradient-bloom transition-transform duration-[4000ms] ease-in-out"
@@ -48,7 +49,7 @@ function GroundingPage() {
           </div>
         </SectionCard>
 
-        <SectionCard title="5-4-3-2-1 sensory">
+        <SectionCard title={t("grounding.sensory")}>
           <ol className="space-y-3">
             {senses.map((s) => (
               <li
@@ -63,7 +64,7 @@ function GroundingPage() {
             ))}
           </ol>
           <p className="mt-4 text-xs text-muted-foreground">
-            Move only as fast as feels safe. There's no finish line.
+            {t("grounding.note")}
           </p>
         </SectionCard>
       </div>
