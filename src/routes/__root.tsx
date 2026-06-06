@@ -102,7 +102,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:description", content: "AI-powered mental wellness, nutrition, and trauma-informed support for Ethiopian youth." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
       { name: "twitter:title", content: "WellNest Ethiopia — Gentle Wellness, Always With You" },
       { name: "twitter:description", content: "AI-powered mental wellness, nutrition, and trauma-informed support for Ethiopian youth." },
       { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/5a19e7a0-d121-48f4-9fab-5a7a7b0d69f6" },
