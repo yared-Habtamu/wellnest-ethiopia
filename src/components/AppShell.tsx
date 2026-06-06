@@ -15,18 +15,19 @@ import {
 import { useEffect, useState } from "react";
 import { useSafety } from "@/lib/safety";
 import { getQueue } from "@/lib/offline-queue";
-
-const nav = [
-  { to: "/dashboard", label: "Today", icon: Home },
-  { to: "/mood", label: "Mood", icon: Smile },
-  { to: "/journal", label: "Journal", icon: BookHeart },
-  { to: "/nutrition", label: "Nutrition", icon: Apple },
-  { to: "/wellness", label: "Women's Wellness", icon: Flower2 },
-  { to: "/gamification", label: "Growth", icon: Trophy },
-  { to: "/settings", label: "Settings", icon: Settings },
-];
+import { useTranslation } from "react-i18next";
 
 export function AppShell() {
+  const { t } = useTranslation();
+  const nav = [
+    { to: "/dashboard", label: t("nav.today"), icon: Home },
+    { to: "/mood", label: t("nav.mood"), icon: Smile },
+    { to: "/journal", label: t("nav.journal"), icon: BookHeart },
+    { to: "/nutrition", label: t("nav.nutrition"), icon: Apple },
+    { to: "/wellness", label: t("nav.wellness"), icon: Flower2 },
+    { to: "/gamification", label: t("nav.growth"), icon: Trophy },
+    { to: "/settings", label: t("nav.settings"), icon: Settings },
+  ];
   const { camouflage, setCamouflage, panicExit } = useSafety();
   const path = useRouterState({ select: (s) => s.location.pathname });
   const [online, setOnline] = useState(true);
@@ -59,10 +60,10 @@ export function AppShell() {
             </div>
             <div>
               <div className="font-display text-lg font-semibold leading-none">
-                {camouflage ? "Notes" : "WellNest"}
+                {camouflage ? t("common.appNameCamouflage") : t("common.appName")}
               </div>
               <div className="text-xs text-muted-foreground">
-                {camouflage ? "Personal" : "Ethiopia"}
+                {camouflage ? t("common.regionCamouflage") : t("common.region")}
               </div>
             </div>
           </Link>
@@ -81,7 +82,7 @@ export function AppShell() {
                   }`}
                 >
                   <Icon className="h-4 w-4" />
-                  <span>{camouflage ? label.replace("Women's Wellness", "Calendar") : label}</span>
+                  <span>{camouflage && to === "/wellness" ? t("nav.wellnessCamouflage") : label}</span>
                 </Link>
               );
             })}
@@ -93,14 +94,14 @@ export function AppShell() {
               className="flex items-center gap-2 rounded-xl border border-border bg-card px-3 py-2 text-xs text-muted-foreground hover:bg-muted"
             >
               {camouflage ? <Eye className="h-3.5 w-3.5" /> : <EyeOff className="h-3.5 w-3.5" />}
-              {camouflage ? "Show wellness app" : "Camouflage mode"}
+              {camouflage ? t("settings.camo") : t("settings.camo")}
             </button>
             <button
               onClick={panicExit}
               className="flex items-center justify-center gap-2 rounded-xl bg-destructive px-3 py-2.5 text-sm font-semibold text-destructive-foreground shadow-sm hover:opacity-90"
               aria-label="Exit immediately to a neutral page"
             >
-              <ShieldAlert className="h-4 w-4" /> Quick Exit
+              <ShieldAlert className="h-4 w-4" /> {t("common.quickExit")}
             </button>
           </div>
         </aside>
@@ -114,25 +115,25 @@ export function AppShell() {
                 <Flower2 className="h-4 w-4 text-primary-foreground" />
               </div>
               <span className="font-display text-sm font-semibold">
-                {camouflage ? "Notes" : "WellNest"}
+                {camouflage ? t("common.appNameCamouflage") : t("common.appName")}
               </span>
             </Link>
             <div className="flex flex-1 items-center justify-end gap-2">
               {!online && (
                 <span className="flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-1 text-xs text-muted-foreground">
-                  <WifiOff className="h-3 w-3" /> Offline — saving locally
+                  <WifiOff className="h-3 w-3" /> {t("common.offline")}
                 </span>
               )}
               {queueCount > 0 && (
                 <span className="rounded-full bg-accent/60 px-2.5 py-1 text-xs text-accent-foreground">
-                  {queueCount} pending sync
+                  {t("common.pendingSync", { count: queueCount })}
                 </span>
               )}
               <button
                 onClick={panicExit}
                 className="flex items-center gap-1.5 rounded-full bg-destructive px-3 py-1.5 text-xs font-semibold text-destructive-foreground shadow-sm hover:opacity-90"
               >
-                <ShieldAlert className="h-3.5 w-3.5" /> Exit
+                <ShieldAlert className="h-3.5 w-3.5" /> {t("common.exit")}
               </button>
             </div>
           </div>
