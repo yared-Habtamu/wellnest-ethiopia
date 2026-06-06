@@ -1,9 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
-import { Camera, Upload, Sparkles } from "lucide-react";
+import { createFileRoute } from '@tanstack/react-router'
+import { useState, useRef } from "react";
+import { Camera, Upload, Sparkles, Loader2, AlertCircle } from "lucide-react";
 import { PageHeader, SectionCard, SoftBadge } from "@/components/SectionCard";
 import { enqueue } from "@/lib/offline-queue";
 import { useTranslation } from "react-i18next";
+import { analyzeMealImage } from "@/lib/api/nutrition.functions";
 
 export const Route = createFileRoute("/_app/nutrition")({
   head: () => ({ meta: [{ title: "Nutrition — WellNest" }] }),
@@ -18,11 +19,56 @@ const examples = [
 
 function NutritionPage() {
   const { t } = useTranslation();
-  const [analysis, setAnalysis] = useState<typeof examples[number] | null>(null);
-  const pick = () => {
-    const guess = examples[Math.floor(Math.random() * examples.length)];
-    setAnalysis(guess);
-    enqueue("nutrition", { ...guess, at: Date.now() });
+  const [analysis, setAnalysis] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsLoading(true);
+    setErrorMsg("");
+    setAnalysis(null);
+
+    try {
+      const reader = new FileReader();
+      reader.onload = async (event) => {
+        const base64String = (event.target?.result as string).split(',')[1];
+        
+        try {
+          const result = await analyzeMealImage({
+            data: {
+              imageBase64: base64String,
+              mimeType: file.type
+            }
+          });
+
+          if (result.isMeal) {
+            setAnalysis(result);
+            enqueue("nutrition", { ...result, at: Date.now() });
+          } else {
+            setErrorMsg(result.error === "not_food" ? "We couldn't clearly identify a meal in this photo. Please try snapping a clearer picture!" : "Failed to identify meal.");
+          }
+        } catch (err) {
+          console.error(err);
+          setErrorMsg("Failed to analyze image. Please try again later.");
+        } finally {
+          setIsLoading(false);
+          if (fileInputRef.current) fileInputRef.current.value = '';
+        }
+      };
+      reader.readAsDataURL(file);
+    } catch (err) {
+      console.error(err);
+      setErrorMsg("Failed to read file.");
+      setIsLoading(false);
+    }
+  };
+
+  const triggerUpload = () => {
+    fileInputRef.current?.click();
   };
 
   return (
@@ -40,18 +86,35 @@ function NutritionPage() {
             <p className="mt-3 text-sm font-medium">{t("nutrition.tap")}</p>
             <p className="mt-1 text-xs text-muted-foreground">{t("nutrition.or")}</p>
             <div className="mt-5 flex gap-2">
-              <button onClick={pick} className="flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground">
-                <Camera className="h-3.5 w-3.5" /> {t("nutrition.useCamera")}
+              <input 
+                type="file" 
+                accept="image/*" 
+                ref={fileInputRef} 
+                onChange={handleFileChange} 
+                className="hidden" 
+              />
+              <button onClick={triggerUpload} disabled={isLoading} className="flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground disabled:opacity-50">
+                {isLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Camera className="h-3.5 w-3.5" />} {t("nutrition.useCamera")}
               </button>
-              <button onClick={pick} className="flex items-center gap-1.5 rounded-full border border-border bg-card px-4 py-2 text-xs">
-                <Upload className="h-3.5 w-3.5" /> {t("nutrition.upload")}
+              <button onClick={triggerUpload} disabled={isLoading} className="flex items-center gap-1.5 rounded-full border border-border bg-card px-4 py-2 text-xs disabled:opacity-50">
+                {isLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Upload className="h-3.5 w-3.5" />} {t("nutrition.upload")}
               </button>
             </div>
           </div>
         </SectionCard>
 
         <SectionCard title={t("nutrition.weSee")}>
-          {analysis ? (
+          {isLoading ? (
+            <div className="flex flex-col items-center justify-center py-8 text-muted-foreground">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <p className="mt-4 text-sm">Analyzing your meal...</p>
+            </div>
+          ) : errorMsg ? (
+            <div className="flex flex-col items-center justify-center rounded-xl bg-destructive/10 p-6 text-center text-destructive">
+              <AlertCircle className="h-8 w-8" />
+              <p className="mt-2 text-sm font-medium">{errorMsg}</p>
+            </div>
+          ) : analysis ? (
             <div>
               <div className="flex items-center justify-between">
                 <div className="font-display text-lg font-semibold">{analysis.name}</div>
