@@ -3,6 +3,7 @@ import { useState } from "react";
 import { PageHeader, SectionCard } from "@/components/SectionCard";
 import { Send, Wind, Phone } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useGuestGuard } from "@/lib/auth";
 
 export const Route = createFileRoute("/_app/wellness/guide")({
   head: () => ({ meta: [{ title: "AI Mental Guide — WellNest" }] }),
@@ -13,11 +14,13 @@ type Msg = { role: "ai" | "you"; text: string };
 
 function GuidePage() {
   const { t } = useTranslation();
+  const guardAction = useGuestGuard();
   const gentleResponses = [t("guide.r1"), t("guide.r2"), t("guide.r3")];
   const [msgs, setMsgs] = useState<Msg[]>([{ role: "ai", text: t("guide.starter") }]);
   const [input, setInput] = useState("");
 
   const send = () => {
+    if (guardAction()) return;
     if (!input.trim()) return;
     const you: Msg = { role: "you", text: input.trim() };
     const ai: Msg = {

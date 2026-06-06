@@ -4,6 +4,7 @@ import { Camera, Upload, Sparkles } from "lucide-react";
 import { PageHeader, SectionCard, SoftBadge } from "@/components/SectionCard";
 import { enqueue } from "@/lib/offline-queue";
 import { useTranslation } from "react-i18next";
+import { useGuestGuard } from "@/lib/auth";
 
 export const Route = createFileRoute("/_app/nutrition")({
   head: () => ({ meta: [{ title: "Nutrition — WellNest" }] }),
@@ -18,8 +19,10 @@ const examples = [
 
 function NutritionPage() {
   const { t } = useTranslation();
+  const guardAction = useGuestGuard();
   const [analysis, setAnalysis] = useState<typeof examples[number] | null>(null);
   const pick = () => {
+    if (guardAction()) return;
     const guess = examples[Math.floor(Math.random() * examples.length)];
     setAnalysis(guess);
     enqueue("nutrition", { ...guess, at: Date.now() });

@@ -4,6 +4,7 @@ import { PageHeader, SectionCard } from "@/components/SectionCard";
 import { enqueue } from "@/lib/offline-queue";
 import { Check } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useGuestGuard } from "@/lib/auth";
 
 export const Route = createFileRoute("/_app/mood")({
   head: () => ({ meta: [{ title: "Mood — WellNest" }] }),
@@ -12,6 +13,7 @@ export const Route = createFileRoute("/_app/mood")({
 
 function MoodPage() {
   const { t } = useTranslation();
+  const guardAction = useGuestGuard();
   const moods = [
     { emoji: "😞", label: t("mood.heavy"), value: 1 },
     { emoji: "😕", label: t("mood.low"), value: 2 },
@@ -24,6 +26,7 @@ function MoodPage() {
   const [saved, setSaved] = useState(false);
 
   const save = () => {
+    if (guardAction()) return;
     if (score == null) return;
     enqueue("mood", { score, note, at: Date.now() });
     setSaved(true);

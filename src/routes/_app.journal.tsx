@@ -4,6 +4,7 @@ import { Mic, Square, Type, Save } from "lucide-react";
 import { PageHeader, SectionCard } from "@/components/SectionCard";
 import { enqueue } from "@/lib/offline-queue";
 import { useTranslation } from "react-i18next";
+import { useGuestGuard } from "@/lib/auth";
 
 export const Route = createFileRoute("/_app/journal")({
   head: () => ({ meta: [{ title: "Journal — WellNest" }] }),
@@ -12,6 +13,7 @@ export const Route = createFileRoute("/_app/journal")({
 
 function JournalPage() {
   const { t } = useTranslation();
+  const guardAction = useGuestGuard();
   const [mode, setMode] = useState<"voice" | "text">("text");
   const [text, setText] = useState("");
   const [recording, setRecording] = useState(false);
@@ -32,6 +34,7 @@ function JournalPage() {
   }, [recording]);
 
   const save = () => {
+    if (guardAction()) return;
     enqueue("journal", { mode, text, durationSec: elapsed, at: Date.now() });
     setText("");
   };

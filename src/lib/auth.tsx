@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useNavigate } from "@tanstack/react-router";
 
 interface User {
   name: string;
@@ -9,12 +10,16 @@ interface User {
 
 interface AuthContextValue {
   user: User | null;
+  isGuest: boolean;
   register: (name: string, email: string, password: string, gender: "male" | "female") => void;
-  login: (email: string, password: string) => boolean,
+  login: (email: string, password: string) => boolean;
   logout: () => void;
+  setGuest: () => void;
 }
 
 const AuthContext = React.createContext<AuthContextValue | undefined>(undefined);
+
+const GUEST_KEY = "wellnest.guest";
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = React.useState<User | null>(() => {
@@ -24,6 +29,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
     return null;
   });
+
+  const isGuest = !user && (typeof window !== 'undefined' && sessionStorage.getItem(GUEST_KEY) === "true");
+
+  const setGuest = () => {
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem(GUEST_KEY, "true");
+    }
+  };
 
   const getUsers = (): User[] => {
     if (typeof window === 'undefined') return [];
@@ -48,6 +61,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     users.push(newUser);
     saveUsers(users);
     localStorage.setItem("wellnest.currentUser", JSON.stringify(newUser));
+    sessionStorage.removeItem(GUEST_KEY);
     setUser(newUser);
   };
 
@@ -59,6 +73,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
     if (typeof window !== 'undefined') {
       localStorage.setItem("wellnest.currentUser", JSON.stringify(found));
+      sessionStorage.removeItem(GUEST_KEY);
     }
     setUser(found);
     return true;
@@ -70,7 +85,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ user, register, login, logout }}>
+    <AuthContext.Provider value={{ user, isGuest, register, login, logout, setGuest }}>
       {children}
     </AuthContext.Provider>
   );
@@ -82,4 +97,17 @@ export const useAuth = (): AuthContextValue => {
     throw new Error("useAuth must be used within AuthProvider");
   }
   return ctx;
+};
+
+/** Returns a guard function. Call it before any save/action — returns true if the user is a guest (and redirects to /register). */
+export const useGuestGuard = () => {
+  const { isGuest } = useAuth();
+  const navigate = useNavigate();
+  return () => {
+    if (isGuest) {
+      navigate({ to: "/register" });
+      return true;
+    }
+    return false;
+  };
 };

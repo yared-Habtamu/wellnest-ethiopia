@@ -4,6 +4,7 @@ import { PageHeader, SectionCard, SoftBadge } from "@/components/SectionCard";
 import { Heart, Flag, EyeOff, Send } from "lucide-react";
 import { enqueue } from "@/lib/offline-queue";
 import { useTranslation } from "react-i18next";
+import { useGuestGuard } from "@/lib/auth";
 
 export const Route = createFileRoute("/_app/wellness/sisterhood")({
   head: () => ({ meta: [{ title: "Anonymous Sisterhood — WellNest" }] }),
@@ -38,11 +39,13 @@ const seed: Post[] = [
 
 function SisterhoodPage() {
   const { t } = useTranslation();
+  const guardAction = useGuestGuard();
   const [posts, setPosts] = useState<Post[]>(seed);
   const [tag, setTag] = useState("Healing");
   const [text, setText] = useState("");
 
   const share = () => {
+    if (guardAction()) return;
     if (!text.trim()) return;
     const p: Post = {
       id: `p${Date.now()}`,

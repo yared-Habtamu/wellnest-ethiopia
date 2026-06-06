@@ -4,6 +4,7 @@ import { PageHeader, SectionCard, SoftBadge } from "@/components/SectionCard";
 import { enqueue } from "@/lib/offline-queue";
 import { Droplet, Moon, Sun, Flower2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useGuestGuard } from "@/lib/auth";
 
 export const Route = createFileRoute("/_app/wellness/cycle")({
   head: () => ({ meta: [{ title: "Cycle — WellNest" }] }),
@@ -12,6 +13,7 @@ export const Route = createFileRoute("/_app/wellness/cycle")({
 
 function CyclePage() {
   const { t } = useTranslation();
+  const guardAction = useGuestGuard();
   const phases = [
     { key: "menstrual", label: t("cycle.menstrual"), Icon: Droplet, color: "bg-bloom/40" },
     { key: "follicular", label: t("cycle.follicular"), Icon: Sun, color: "bg-warm/40" },
@@ -24,6 +26,7 @@ function CyclePage() {
   const [logged, setLogged] = useState(false);
 
   const logFlow = (intensity: string) => {
+    if (guardAction()) return;
     enqueue("cycle", { intensity, at: Date.now() });
     setLogged(true);
     setTimeout(() => setLogged(false), 2000);

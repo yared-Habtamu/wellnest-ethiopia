@@ -4,6 +4,7 @@ import { PageHeader, SectionCard } from "@/components/SectionCard";
 import { enqueue } from "@/lib/offline-queue";
 import { Check } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useGuestGuard } from "@/lib/auth";
 
 export const Route = createFileRoute("/_app/wellness/symptoms")({
   head: () => ({ meta: [{ title: "Symptoms — WellNest" }] }),
@@ -12,6 +13,7 @@ export const Route = createFileRoute("/_app/wellness/symptoms")({
 
 function SymptomsPage() {
   const { t } = useTranslation();
+  const guardAction = useGuestGuard();
   const categories = [
     { group: t("symptoms.body"), items: [t("symptoms.tension"), t("symptoms.fatigue"), t("symptoms.headache"), t("symptoms.stomach"), t("symptoms.restless")] },
     { group: t("symptoms.feelings"), items: [t("symptoms.anxious"), t("symptoms.numb"), t("symptoms.tearful"), t("symptoms.hyper"), t("symptoms.disconnected")] },
@@ -29,6 +31,7 @@ function SymptomsPage() {
   };
 
   const save = () => {
+    if (guardAction()) return;
     enqueue("symptom", {
       items: Array.from(selected),
       intensity,
