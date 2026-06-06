@@ -68,8 +68,8 @@
 
 :root {
   --radius: 0.875rem;
-  --font-display: "Outfit", ui-sans-serif, system-ui, sans-serif;
-  --font-body: "Figtree", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Outfit", "Noto Sans Ethiopic", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Figtree", "Noto Sans Ethiopic", ui-sans-serif, system-ui, sans-serif;
 
   /* Sage & Cream — trauma-informed wellness palette */
   --background: oklch(0.975 0.012 95);
