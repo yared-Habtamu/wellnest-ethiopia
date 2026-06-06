@@ -4,11 +4,12 @@ interface User {
   name: string;
   email: string;
   password: string; // plain for demo – NEVER store plain passwords in production
+  gender: "male" | "female";
 }
 
 interface AuthContextValue {
   user: User | null;
-  register: (name: string, email: string, password: string) => void;
+  register: (name: string, email: string, password: string, gender: "male" | "female") => void;
   login: (email: string, password: string) => boolean,
   logout: () => void;
 }
@@ -36,14 +37,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const register = (name: string, email: string, password: string) => {
+  const register = (name: string, email: string, password: string, gender: "male" | "female") => {
     const users = getUsers();
     // simple duplicate check
     if (users.some((u) => u.email === email)) {
       alert("Email already registered");
       return;
     }
-    const newUser: User = { name, email, password };
+    const newUser: User = { name, email, password, gender };
     users.push(newUser);
     saveUsers(users);
     localStorage.setItem("wellnest.currentUser", JSON.stringify(newUser));

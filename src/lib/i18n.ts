@@ -129,6 +129,7 @@ const en = {
     fat: "Fat",
     balance: "Gentle balance for today. Pair with water and a few minutes of fresh air if you can.",
     empty: "Your last scan will appear here. Nothing logged yet.",
+    scanning: "Analyzing meal...",
   },
   growth: {
     eyebrow: "Growth",
@@ -455,6 +456,7 @@ const am = {
     fat: "ስብ",
     balance: "ለዛሬ ለስላሳ ሚዛን። ከቻሉ ከውሃ እና ከጥቂት ደቂቃ ንፁህ አየር ጋር ያጣምሩ።",
     empty: "የመጨረሻው ቅኝትዎ እዚህ ይታያል። እስካሁን ምንም አልተመዘገበም።",
+    scanning: "ምግብ በመተንተን ላይ...",
   },
   growth: {
     eyebrow: "እድገት",

@@ -28,11 +28,13 @@ function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const [gender, setGender] = useState<"male" | "female">("male");
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // In a real app you'd send these to a backend. Here we just store email.
     // The name could be stored similarly; we just keep it simple.
-    register(name, email, password);
+    register(name, email, password, gender);
     // After registration go to onboarding.
     navigate({ to: "/onboarding" });
   };
@@ -76,6 +78,19 @@ function Register() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="gender">Gender</Label>
+            <select
+              id="gender"
+              value={gender}
+              onChange={(e) => setGender(e.target.value as "male" | "female")}
+              required
+              className="w-full rounded-md border border-border bg-card px-3 py-2 text-sm"
+            >
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
           </div>
           <Button type="submit" className="w-full">
             Sign Up
