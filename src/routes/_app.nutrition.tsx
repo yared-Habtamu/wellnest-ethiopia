@@ -5,6 +5,7 @@ import { PageHeader, SectionCard, SoftBadge } from "@/components/SectionCard";
 import { enqueue } from "@/lib/offline-queue";
 import { useTranslation } from "react-i18next";
 import { analyzeMealImage } from "@/lib/api/nutrition.functions";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/_app/nutrition")({
   head: () => ({ meta: [{ title: "Nutrition — WellNest" }] }),
@@ -23,6 +24,7 @@ function NutritionPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -57,6 +59,7 @@ function NutritionPage() {
         } finally {
           setIsLoading(false);
           if (fileInputRef.current) fileInputRef.current.value = '';
+          if (cameraInputRef.current) cameraInputRef.current.value = '';
         }
       };
       reader.readAsDataURL(file);
@@ -69,6 +72,17 @@ function NutritionPage() {
 
   const triggerUpload = () => {
     fileInputRef.current?.click();
+  };
+
+  const triggerCamera = () => {
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if (!isMobile) {
+      toast.info("Camera unavailable on desktop", {
+        description: "The live camera feature is only available on mobile phones. Please use the Upload button instead to select an image from your computer.",
+      });
+      return;
+    }
+    cameraInputRef.current?.click();
   };
 
   return (
@@ -93,7 +107,15 @@ function NutritionPage() {
                 onChange={handleFileChange} 
                 className="hidden" 
               />
-              <button onClick={triggerUpload} disabled={isLoading} className="flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground disabled:opacity-50">
+              <input 
+                type="file" 
+                accept="image/*" 
+                capture="environment"
+                ref={cameraInputRef} 
+                onChange={handleFileChange} 
+                className="hidden" 
+              />
+              <button onClick={triggerCamera} disabled={isLoading} className="flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground disabled:opacity-50">
                 {isLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Camera className="h-3.5 w-3.5" />} {t("nutrition.useCamera")}
               </button>
               <button onClick={triggerUpload} disabled={isLoading} className="flex items-center gap-1.5 rounded-full border border-border bg-card px-4 py-2 text-xs disabled:opacity-50">
